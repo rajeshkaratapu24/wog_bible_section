@@ -18,9 +18,13 @@ class _BibleHomeState extends State<BibleHome> {
 
   final Map<String, GlobalKey> verseKeys = {};
 
-  // బైబిల్ లోని 66 పుస్తకాల పేర్ల పూర్తి లిస్ట్ (English to Telugu Map)
+  // Premium Colors
+  final Color bgColor = const Color(0xFF121212); // Deep Black
+  final Color surfaceColor = const Color(0xFF1E1E1E); // Dark Grey Surface
+  final Color goldAccent = const Color(0xFFD4AF37); // Classic Gold
+  final Color textPrimary = const Color(0xFFE0E0E0); // Soft White for reading
+
   final Map<String, String> teluguBookNames = {
-    // పాత నిబంధన (Old Testament)
     'Genesis': 'ఆదికాండము',
     'Exodus': 'నిర్గమకాండము',
     'Leviticus': 'లేవీయకాండము',
@@ -43,7 +47,7 @@ class _BibleHomeState extends State<BibleHome> {
     'Proverbs': 'సామెతలు',
     'Ecclesiastes': 'ప్రసంగి',
     'Song of Solomon': 'పరమగీతములు',
-    'Song of Songs': 'పరమగీతములు', // Some XMLs use this
+    'Song of Songs': 'పరమగీతములు',
     'Isaiah': 'యెషయా',
     'Jeremiah': 'యిర్మీయా',
     'Lamentations': 'విలాపవాక్యములు',
@@ -61,8 +65,6 @@ class _BibleHomeState extends State<BibleHome> {
     'Haggai': 'హగ్గయి',
     'Zechariah': 'జెకర్యా',
     'Malachi': 'మలాకీ',
-
-    // క్రొత్త నిబంధన (New Testament)
     'Matthew': 'మత్తయి సువార్త',
     'Mark': 'మార్కు సువార్త',
     'Luke': 'లూకా సువార్త',
@@ -118,144 +120,156 @@ class _BibleHomeState extends State<BibleHome> {
     if (key != null && key.currentContext != null) {
       Scrollable.ensureVisible(
         key.currentContext!,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-        alignment: 0.1, 
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.fastOutSlowIn,
+        alignment: 0.15,
       );
     }
   }
+
+  // డ్రాప్ డౌన్ కి ప్రీమియం లుక్ ఇచ్చే రీయూజబుల్ విడ్జెట్
+  Widget _buildCustomDropdown({required Widget child}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+      decoration: BoxDecoration(
+        color: surfaceColor,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: DropdownButtonHideUnderline(child: child),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: const Text('పరిశుద్ధ గ్రంథము', style: TextStyle(color: Colors.amber)),
-        centerTitle: true,
+        backgroundColor: bgColor,
         elevation: 0,
+        title: Text(
+          'పరిశుద్ధ గ్రంథము',
+          style: TextStyle(
+            color: goldAccent,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.2,
+          ),
+        ),
+        centerTitle: true,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(color: surfaceColor, height: 1.0),
+        ),
       ),
       body: FutureBuilder<List<BibleBook>>(
         future: futureBibleBooks,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: Colors.amber));
+            return Center(child: CircularProgressIndicator(color: goldAccent));
           } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('డేటా లోడ్ అవ్వలేదు. ఫైల్ చెక్ చేయండి.'));
+            return Center(child: Text('డేటా లోడ్ అవ్వలేదు. ఫైల్ చెక్ చేయండి.', style: TextStyle(color: textPrimary)));
           }
 
           return Column(
             children: [
-              // --- Top Dropdown Menu (Book > Chapter > Verse) ---
+              // --- Premium Top Bar ---
               Container(
-                color: Colors.grey[900],
-                padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
+                color: bgColor,
+                padding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
                 child: Row(
                   children: [
                     // 1. Book Dropdown
                     Expanded(
-                      flex: 4,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.amber.withOpacity(0.5)),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<BibleBook>(
-                            isExpanded: true,
-                            dropdownColor: Colors.grey[900],
-                            value: selectedBook,
-                            items: allBooks.map((book) {
-                              return DropdownMenuItem(
-                                value: book,
-                                child: Text(
-                                  getTeluguName(book.bname),
-                                  style: const TextStyle(fontSize: 13, color: Colors.white),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (BibleBook? newBook) {
-                              if (newBook != null) {
-                                setState(() {
-                                  selectedBook = newBook;
-                                  selectedChapter = newBook.chapters.isNotEmpty ? newBook.chapters.first : null;
-                                  selectedVerse = null;
-                                });
-                              }
-                            },
-                          ),
+                      flex: 5,
+                      child: _buildCustomDropdown(
+                        child: DropdownButton<BibleBook>(
+                          isExpanded: true,
+                          dropdownColor: surfaceColor,
+                          icon: Icon(Icons.keyboard_arrow_down, color: goldAccent, size: 20),
+                          value: selectedBook,
+                          items: allBooks.map((book) {
+                            return DropdownMenuItem(
+                              value: book,
+                              child: Text(
+                                getTeluguName(book.bname),
+                                style: TextStyle(fontSize: 14, color: textPrimary, fontWeight: FontWeight.w500),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (BibleBook? newBook) {
+                            if (newBook != null) {
+                              setState(() {
+                                selectedBook = newBook;
+                                selectedChapter = newBook.chapters.isNotEmpty ? newBook.chapters.first : null;
+                                selectedVerse = null;
+                              });
+                            }
+                          },
                         ),
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 10),
 
                     // 2. Chapter Dropdown
                     Expanded(
-                      flex: 2,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.amber.withOpacity(0.5)),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<Chapter>(
-                            isExpanded: true,
-                            dropdownColor: Colors.grey[900],
-                            value: selectedChapter,
-                            hint: const Text('అధ్యా', style: TextStyle(fontSize: 12)),
-                            items: selectedBook?.chapters.map((chapter) {
-                              return DropdownMenuItem(
-                                value: chapter,
-                                child: Text('అధ్యా ${chapter.cnumber}', style: const TextStyle(fontSize: 13, color: Colors.white)),
-                              );
-                            }).toList() ?? [],
-                            onChanged: (Chapter? newChapter) {
-                              if (newChapter != null) {
-                                setState(() {
-                                  selectedChapter = newChapter;
-                                  selectedVerse = null;
-                                });
-                              }
-                            },
-                          ),
+                      flex: 3,
+                      child: _buildCustomDropdown(
+                        child: DropdownButton<Chapter>(
+                          isExpanded: true,
+                          dropdownColor: surfaceColor,
+                          icon: Icon(Icons.keyboard_arrow_down, color: goldAccent, size: 20),
+                          value: selectedChapter,
+                          hint: Text('అధ్యా', style: TextStyle(fontSize: 13, color: textPrimary)),
+                          items: selectedBook?.chapters.map((chapter) {
+                            return DropdownMenuItem(
+                              value: chapter,
+                              child: Text('అధ్యా ${chapter.cnumber}', style: TextStyle(fontSize: 14, color: textPrimary)),
+                            );
+                          }).toList() ?? [],
+                          onChanged: (Chapter? newChapter) {
+                            if (newChapter != null) {
+                              setState(() {
+                                selectedChapter = newChapter;
+                                selectedVerse = null;
+                              });
+                            }
+                          },
                         ),
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 10),
 
                     // 3. Verse Dropdown
                     Expanded(
-                      flex: 2,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.amber.withOpacity(0.5)),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<Verse>(
-                            isExpanded: true,
-                            dropdownColor: Colors.grey[900],
-                            value: selectedVerse,
-                            hint: const Text('వచనం', style: TextStyle(fontSize: 12)),
-                            items: selectedChapter?.verses.map((verse) {
-                              return DropdownMenuItem(
-                                value: verse,
-                                child: Text('వచనం ${verse.vnumber}', style: const TextStyle(fontSize: 13, color: Colors.white)),
-                              );
-                            }).toList() ?? [],
-                            onChanged: (Verse? newVerse) {
-                              if (newVerse != null) {
-                                setState(() {
-                                  selectedVerse = newVerse;
-                                });
-                                scrollToVerse(newVerse.vnumber);
-                              }
-                            },
-                          ),
+                      flex: 3,
+                      child: _buildCustomDropdown(
+                        child: DropdownButton<Verse>(
+                          isExpanded: true,
+                          dropdownColor: surfaceColor,
+                          icon: Icon(Icons.keyboard_arrow_down, color: goldAccent, size: 20),
+                          value: selectedVerse,
+                          hint: Text('వచనం', style: TextStyle(fontSize: 13, color: textPrimary)),
+                          items: selectedChapter?.verses.map((verse) {
+                            return DropdownMenuItem(
+                              value: verse,
+                              child: Text('వచనం ${verse.vnumber}', style: TextStyle(fontSize: 14, color: textPrimary)),
+                            );
+                          }).toList() ?? [],
+                          onChanged: (Verse? newVerse) {
+                            if (newVerse != null) {
+                              setState(() {
+                                selectedVerse = newVerse;
+                              });
+                              scrollToVerse(newVerse.vnumber);
+                            }
+                          },
                         ),
                       ),
                     ),
@@ -263,38 +277,46 @@ class _BibleHomeState extends State<BibleHome> {
                 ),
               ),
 
-              const Divider(height: 1, color: Colors.amber),
-
-              // --- Reading Area (Verses List) ---
+              // --- Reading Area ---
               Expanded(
                 child: selectedChapter == null
-                    ? const Center(child: Text('ఈ పుస్తకంలో అధ్యాయాలు లేవు'))
+                    ? Center(child: Text('ఈ పుస్తకంలో అధ్యాయాలు లేవు', style: TextStyle(color: textPrimary)))
                     : ListView.builder(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                         itemCount: selectedChapter!.verses.length,
                         itemBuilder: (context, index) {
                           final verse = selectedChapter!.verses[index];
-                          
                           verseKeys[verse.vnumber] ??= GlobalKey();
+                          
                           bool isHighlighted = selectedVerse?.vnumber == verse.vnumber;
 
                           return Container(
                             key: verseKeys[verse.vnumber],
-                            margin: const EdgeInsets.only(bottom: 12.0),
-                            padding: isHighlighted ? const EdgeInsets.all(8.0) : EdgeInsets.zero,
-                            decoration: BoxDecoration(
-                              color: isHighlighted ? Colors.amber.withOpacity(0.2) : Colors.transparent,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                            margin: const EdgeInsets.only(bottom: 16.0),
+                            // హైలైట్ అయినప్పుడు ఎడమ వైపున ప్రొఫెషనల్ గోల్డ్ లైన్
+                            decoration: isHighlighted
+                                ? BoxDecoration(
+                                    color: goldAccent.withOpacity(0.05),
+                                    border: Border(left: BorderSide(color: goldAccent, width: 3)),
+                                  )
+                                : const BoxDecoration(
+                                    border: Border(left: BorderSide(color: Colors.transparent, width: 3)),
+                                  ),
+                            padding: const EdgeInsets.only(left: 12.0, top: 4.0, bottom: 4.0),
                             child: RichText(
                               text: TextSpan(
-                                style: const TextStyle(fontSize: 18, color: Colors.white, height: 1.6),
+                                style: TextStyle(
+                                  fontSize: 18, 
+                                  color: textPrimary, 
+                                  height: 1.7, // చదవడానికి వీలుగా మంచి స్పేసింగ్
+                                ),
                                 children: [
                                   TextSpan(
-                                    text: '${verse.vnumber}. ',
+                                    text: '${verse.vnumber}  ',
                                     style: TextStyle(
-                                      fontWeight: FontWeight.bold, 
-                                      color: isHighlighted ? Colors.amber : Colors.amber[700]
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: isHighlighted ? goldAccent : goldAccent.withOpacity(0.7),
                                     ),
                                   ),
                                   TextSpan(text: verse.text),
