@@ -9,8 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # Baloo Tammudu 2 ఫాంట్ కోసం
   google_fonts: ^6.2.1
-  xml: ^6.3.0 # XML ని చదవడానికి
+  # మీ bible.xml ఫైల్ ని చదవడానికి
+  xml: ^6.3.0
 
 dev_dependencies:
   flutter_test:
@@ -19,5 +21,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  
+  # మీ XML ఫైల్ యాప్ కి లింక్ చేయడానికి
   assets:
-    - assets/bible.xml # ఇక్కడ మీ XML ఫైల్ లింక్ చేసాము
+    - assets/bible.xml
