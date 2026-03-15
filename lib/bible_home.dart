@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart'; // షేర్ ఫీచర్ కోసం
 import 'bible_data.dart';
-import 'bible_search.dart'; // కొత్త సెర్చ్ ఫైల్ ఇంపోర్ట్ చేసాము
+import 'bible_search.dart';
 
 class BibleHome extends StatefulWidget {
   const BibleHome({super.key});
@@ -80,20 +81,9 @@ class _BibleHomeState extends State<BibleHome> {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 4),
         padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: headerBoxColor,
-          borderRadius: BorderRadius.circular(8),
-        ),
+        decoration: BoxDecoration(color: headerBoxColor, borderRadius: BorderRadius.circular(8)),
         child: Center(
-          child: Text(
-            text,
-            style: GoogleFonts.balooTammudu2(
-              color: goldText, 
-              fontSize: 16, 
-              fontWeight: FontWeight.bold,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
+          child: Text(text, style: GoogleFonts.balooTammudu2(color: goldText, fontSize: 16, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis),
         ),
       ),
     );
@@ -105,10 +95,7 @@ class _BibleHomeState extends State<BibleHome> {
         context,
         MaterialPageRoute(
           builder: (context) => BibleReadingScreen(
-            book: selectedBook!,
-            chapter: selectedChapter!,
-            initialVerse: initialVerse,
-            teluguBookName: getTeluguName(selectedBook!.bname),
+            book: selectedBook!, chapter: selectedChapter!, initialVerse: initialVerse, teluguBookName: getTeluguName(selectedBook!.bname),
           ),
         ),
       );
@@ -120,16 +107,11 @@ class _BibleHomeState extends State<BibleHome> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        elevation: 0,
+        backgroundColor: Colors.black, elevation: 0,
         leading: IconButton(icon: const Icon(Icons.menu, color: Colors.white), onPressed: () {}),
-        title: Text(
-          'W   O   G', 
-          style: GoogleFonts.balooTammudu2(color: Colors.white, fontSize: 24, letterSpacing: 2.0),
-        ),
+        title: Text('W   O   G', style: GoogleFonts.balooTammudu2(color: Colors.white, fontSize: 24, letterSpacing: 2.0)),
         centerTitle: true,
         actions: [
-          // సెర్చ్ బటన్ ఇక్కడ యాడ్ చేసాము
           IconButton(
             icon: const Icon(Icons.search, color: Colors.white), 
             onPressed: () {
@@ -138,8 +120,7 @@ class _BibleHomeState extends State<BibleHome> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => BibleSearchScreen(
-                      allBooks: allBooks,
-                      getTeluguName: getTeluguName,
+                      allBooks: allBooks, currentBook: selectedBook, getTeluguName: getTeluguName,
                     ),
                   ),
                 );
@@ -153,35 +134,22 @@ class _BibleHomeState extends State<BibleHome> {
       body: FutureBuilder<List<BibleBook>>(
         future: futureBibleBooks,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(color: goldText));
-          } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
-              child: Text(
-                'డేటా లోడ్ అవ్వలేదు.', 
-                style: GoogleFonts.balooTammudu2(color: Colors.white, fontSize: 16),
-              ),
-            );
-          }
+          if (snapshot.connectionState == ConnectionState.waiting) return Center(child: CircularProgressIndicator(color: goldText));
+          if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) return Center(child: Text('డేటా లోడ్ అవ్వలేదు.', style: GoogleFonts.balooTammudu2(color: Colors.white, fontSize: 16)));
 
           return Column(
             children: [
               Container(
-                color: bgColor,
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                color: bgColor, padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    _buildTopSelectionBox(getTeluguName(selectedBook?.bname ?? ""), flex: 4),
-                    const SizedBox(width: 12),
-                    _buildTopSelectionBox(selectedChapter?.cnumber ?? "", flex: 2),
-                    const SizedBox(width: 12),
+                    _buildTopSelectionBox(getTeluguName(selectedBook?.bname ?? ""), flex: 4), const SizedBox(width: 12),
+                    _buildTopSelectionBox(selectedChapter?.cnumber ?? "", flex: 2), const SizedBox(width: 12),
                     _buildTopSelectionBox(selectedVerse?.vnumber ?? "", flex: 2),
                   ],
                 ),
               ),
-              
               Divider(height: 1, color: dividerColor, thickness: 1),
-
               Expanded(
                 child: Row(
                   children: [
@@ -193,32 +161,13 @@ class _BibleHomeState extends State<BibleHome> {
                           final book = allBooks[index];
                           final isSelected = selectedBook?.bname == book.bname;
                           return InkWell(
-                            onTap: () {
-                              setState(() {
-                                selectedBook = book;
-                                selectedChapter = book.chapters.isNotEmpty ? book.chapters.first : null;
-                                selectedVerse = selectedChapter?.verses.isNotEmpty == true ? selectedChapter!.verses.first : null;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                              child: Center(
-                                child: Text(
-                                  getTeluguName(book.bname),
-                                  style: GoogleFonts.balooTammudu2(
-                                    fontSize: 16, 
-                                    color: isSelected ? goldText : greyText,
-                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            onTap: () => setState(() { selectedBook = book; selectedChapter = book.chapters.isNotEmpty ? book.chapters.first : null; selectedVerse = selectedChapter?.verses.isNotEmpty == true ? selectedChapter!.verses.first : null; }),
+                            child: Container(padding: const EdgeInsets.symmetric(vertical: 20), child: Center(child: Text(getTeluguName(book.bname), style: GoogleFonts.balooTammudu2(fontSize: 16, color: isSelected ? goldText : greyText, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)))),
                           );
                         },
                       ),
                     ),
                     Container(width: 1, color: dividerColor),
-
                     Expanded(
                       flex: 2,
                       child: selectedBook == null ? const SizedBox() : ListView.builder(
@@ -227,31 +176,13 @@ class _BibleHomeState extends State<BibleHome> {
                           final chapter = selectedBook!.chapters[index];
                           final isSelected = selectedChapter?.cnumber == chapter.cnumber;
                           return InkWell(
-                            onTap: () {
-                              setState(() {
-                                selectedChapter = chapter;
-                                selectedVerse = chapter.verses.isNotEmpty ? chapter.verses.first : null;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                              child: Center(
-                                child: Text(
-                                  chapter.cnumber,
-                                  style: GoogleFonts.balooTammudu2(
-                                    fontSize: 16, 
-                                    color: isSelected ? goldText : greyText,
-                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            onTap: () => setState(() { selectedChapter = chapter; selectedVerse = chapter.verses.isNotEmpty ? chapter.verses.first : null; }),
+                            child: Container(padding: const EdgeInsets.symmetric(vertical: 20), child: Center(child: Text(chapter.cnumber, style: GoogleFonts.balooTammudu2(fontSize: 16, color: isSelected ? goldText : greyText, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)))),
                           );
                         },
                       ),
                     ),
                     Container(width: 1, color: dividerColor),
-
                     Expanded(
                       flex: 2,
                       child: selectedChapter == null ? const SizedBox() : ListView.builder(
@@ -260,25 +191,8 @@ class _BibleHomeState extends State<BibleHome> {
                           final verse = selectedChapter!.verses[index];
                           final isSelected = selectedVerse?.vnumber == verse.vnumber;
                           return InkWell(
-                            onTap: () {
-                              setState(() {
-                                selectedVerse = verse;
-                              });
-                              _openReadingScreen(verse);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                              child: Center(
-                                child: Text(
-                                  verse.vnumber,
-                                  style: GoogleFonts.balooTammudu2(
-                                    fontSize: 16, 
-                                    color: isSelected ? goldText : greyText,
-                                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            onTap: () { setState(() => selectedVerse = verse); _openReadingScreen(verse); },
+                            child: Container(padding: const EdgeInsets.symmetric(vertical: 20), child: Center(child: Text(verse.vnumber, style: GoogleFonts.balooTammudu2(fontSize: 16, color: isSelected ? goldText : greyText, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)))),
                           );
                         },
                       ),
@@ -292,17 +206,11 @@ class _BibleHomeState extends State<BibleHome> {
       ),
 
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.black, border: Border(top: BorderSide(color: dividerColor, width: 1)),
-        ),
+        decoration: BoxDecoration(color: Colors.black, border: Border(top: BorderSide(color: dividerColor, width: 1))),
         child: BottomNavigationBar(
-          backgroundColor: Colors.black, 
-          type: BottomNavigationBarType.fixed, 
-          currentIndex: 1,
-          selectedItemColor: Colors.white, 
-          unselectedItemColor: greyText,
-          selectedLabelStyle: GoogleFonts.balooTammudu2(fontSize: 10),
-          unselectedLabelStyle: GoogleFonts.balooTammudu2(fontSize: 10),
+          backgroundColor: Colors.black, type: BottomNavigationBarType.fixed, currentIndex: 1,
+          selectedItemColor: Colors.white, unselectedItemColor: greyText,
+          selectedLabelStyle: GoogleFonts.balooTammudu2(fontSize: 10), unselectedLabelStyle: GoogleFonts.balooTammudu2(fontSize: 10),
           items: const [
             BottomNavigationBarItem(icon: Padding(padding: EdgeInsets.only(bottom: 4), child: Icon(Icons.home_outlined)), label: 'HOME'),
             BottomNavigationBarItem(icon: Padding(padding: EdgeInsets.only(bottom: 4), child: Icon(Icons.menu_book)), label: 'BIBLE'),
@@ -315,19 +223,14 @@ class _BibleHomeState extends State<BibleHome> {
   }
 }
 
+// --- READING SCREEN WITH MULTI-SELECT & SHARE ---
 class BibleReadingScreen extends StatefulWidget {
   final BibleBook book;
   final Chapter chapter;
   final Verse initialVerse;
   final String teluguBookName;
 
-  const BibleReadingScreen({
-    super.key,
-    required this.book,
-    required this.chapter,
-    required this.initialVerse,
-    required this.teluguBookName,
-  });
+  const BibleReadingScreen({super.key, required this.book, required this.chapter, required this.initialVerse, required this.teluguBookName});
 
   @override
   State<BibleReadingScreen> createState() => _BibleReadingScreenState();
@@ -335,39 +238,55 @@ class BibleReadingScreen extends StatefulWidget {
 
 class _BibleReadingScreenState extends State<BibleReadingScreen> {
   final Map<String, GlobalKey> verseKeys = {};
+  Set<String> selectedVerses = {}; // మల్టిపుల్ వచనాలు సెలెక్ట్ చేసుకోవడానికి
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollToVerse(widget.initialVerse.vnumber);
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToVerse(widget.initialVerse.vnumber));
   }
 
   void _scrollToVerse(String vnumber) {
     final key = verseKeys[vnumber];
     if (key != null && key.currentContext != null) {
-      Scrollable.ensureVisible(
-        key.currentContext!,
-        duration: const Duration(milliseconds: 600),
-        curve: Curves.easeInOut,
-        alignment: 0.15, 
-      );
+      Scrollable.ensureVisible(key.currentContext!, duration: const Duration(milliseconds: 600), curve: Curves.easeInOut, alignment: 0.15);
     }
+  }
+
+  void _shareSelectedVerses() {
+    if (selectedVerses.isEmpty) return;
+    
+    // వచనాలను ఆర్డర్ లో షేర్ చేయడానికి సార్టింగ్
+    List<Verse> versesToShare = widget.chapter.verses.where((v) => selectedVerses.contains(v.vnumber)).toList();
+    versesToShare.sort((a, b) => int.parse(a.vnumber).compareTo(int.parse(b.vnumber)));
+
+    List<String> shareLines = versesToShare.map((v) => "${v.vnumber}. ${v.text}").toList();
+    String shareText = "పరిశుద్ధ గ్రంథము నుండి:\n${widget.teluguBookName} ${widget.chapter.cnumber}\n\n${shareLines.join('\n')}\n\n- WOG App";
+    
+    Share.share(shareText);
+    setState(() => selectedVerses.clear()); // షేర్ చేసాక సెలెక్షన్ క్యాన్సిల్ అవుతుంది
   }
 
   @override
   Widget build(BuildContext context) {
+    bool isMultiSelectMode = selectedVerses.isNotEmpty;
+
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text(
-          '${widget.teluguBookName} ${widget.chapter.cnumber}', 
-          style: GoogleFonts.balooTammudu2(color: const Color(0xFFE5A853), letterSpacing: 1.0, fontSize: 22),
+          isMultiSelectMode ? '${selectedVerses.length} ఎంచుకోబడ్డాయి' : '${widget.teluguBookName} ${widget.chapter.cnumber}', 
+          style: GoogleFonts.balooTammudu2(color: isMultiSelectMode ? Colors.white : const Color(0xFFE5A853), letterSpacing: 1.0, fontSize: 22),
         ),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.white), 
+        actions: isMultiSelectMode
+            ? [
+                IconButton(icon: const Icon(Icons.share, color: Color(0xFFE5A853)), onPressed: _shareSelectedVerses),
+                IconButton(icon: const Icon(Icons.close), onPressed: () => setState(() => selectedVerses.clear())),
+              ]
+            : null,
       ),
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
@@ -376,34 +295,50 @@ class _BibleReadingScreenState extends State<BibleReadingScreen> {
           final verse = widget.chapter.verses[index];
           verseKeys[verse.vnumber] ??= GlobalKey();
           
-          bool isHighlighted = verse.vnumber == widget.initialVerse.vnumber;
+          bool isHighlighted = verse.vnumber == widget.initialVerse.vnumber && !isMultiSelectMode;
+          bool isSelected = selectedVerses.contains(verse.vnumber);
 
-          return Container(
-            key: verseKeys[verse.vnumber],
-            margin: const EdgeInsets.only(bottom: 16.0),
-            decoration: isHighlighted
-                ? BoxDecoration(
-                    color: const Color(0xFFE5A853).withOpacity(0.1),
-                    border: const Border(left: BorderSide(color: Color(0xFFE5A853), width: 3)),
-                  )
-                : const BoxDecoration(
-                    border: Border(left: BorderSide(color: Colors.transparent, width: 3)),
-                  ),
-            padding: const EdgeInsets.only(left: 12.0, top: 4.0, bottom: 4.0),
-            child: RichText(
-              text: TextSpan(
-                style: GoogleFonts.balooTammudu2(fontSize: 18, color: const Color(0xFFE0E0E0), height: 1.7),
-                children: [
-                  TextSpan(
-                    text: '${verse.vnumber}  ',
-                    style: GoogleFonts.balooTammudu2(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: isHighlighted ? const Color(0xFFE5A853) : const Color(0xFFE5A853).withOpacity(0.7),
+          return GestureDetector(
+            onLongPress: () {
+              setState(() {
+                if (isSelected) selectedVerses.remove(verse.vnumber);
+                else selectedVerses.add(verse.vnumber);
+              });
+            },
+            onTap: () {
+              if (isMultiSelectMode) {
+                setState(() {
+                  if (isSelected) selectedVerses.remove(verse.vnumber);
+                  else selectedVerses.add(verse.vnumber);
+                });
+              }
+            },
+            child: Container(
+              key: verseKeys[verse.vnumber],
+              margin: const EdgeInsets.only(bottom: 16.0),
+              decoration: isSelected || isHighlighted
+                  ? BoxDecoration(
+                      color: const Color(0xFFE5A853).withOpacity(0.15),
+                      border: const Border(left: BorderSide(color: Color(0xFFE5A853), width: 4)),
+                    )
+                  : const BoxDecoration(
+                      border: Border(left: BorderSide(color: Colors.transparent, width: 4)),
                     ),
-                  ),
-                  TextSpan(text: verse.text),
-                ],
+              padding: const EdgeInsets.only(left: 12.0, top: 8.0, bottom: 8.0),
+              child: RichText(
+                text: TextSpan(
+                  style: GoogleFonts.balooTammudu2(fontSize: 18, color: const Color(0xFFE0E0E0), height: 1.7),
+                  children: [
+                    TextSpan(
+                      text: '${verse.vnumber}  ',
+                      style: GoogleFonts.balooTammudu2(
+                        fontSize: 15, fontWeight: FontWeight.bold,
+                        color: isSelected || isHighlighted ? const Color(0xFFE5A853) : const Color(0xFFE5A853).withOpacity(0.7),
+                      ),
+                    ),
+                    TextSpan(text: verse.text),
+                  ],
+                ),
               ),
             ),
           );
