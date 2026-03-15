@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'bible_data.dart';
 
 class BibleHome extends StatefulWidget {
@@ -85,7 +86,11 @@ class _BibleHomeState extends State<BibleHome> {
         child: Center(
           child: Text(
             text,
-            style: TextStyle(color: goldText, fontSize: 16, fontWeight: FontWeight.bold),
+            style: GoogleFonts.balooTammudu2(
+              color: goldText, 
+              fontSize: 16, 
+              fontWeight: FontWeight.bold,
+            ),
             overflow: TextOverflow.ellipsis,
           ),
         ),
@@ -93,7 +98,6 @@ class _BibleHomeState extends State<BibleHome> {
     );
   }
 
-  // రీడింగ్ స్క్రీన్ కి వెళ్ళడానికి ఫంక్షన్
   void _openReadingScreen(Verse initialVerse) {
     if (selectedBook != null && selectedChapter != null) {
       Navigator.push(
@@ -118,7 +122,10 @@ class _BibleHomeState extends State<BibleHome> {
         backgroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(icon: const Icon(Icons.menu, color: Colors.white), onPressed: () {}),
-        title: const Text('W   O   G', style: TextStyle(color: Colors.white, fontSize: 20, letterSpacing: 2.0)),
+        title: Text(
+          'W   O   G', 
+          style: GoogleFonts.balooTammudu2(color: Colors.white, fontSize: 24, letterSpacing: 2.0),
+        ),
         centerTitle: true,
         actions: [
           IconButton(icon: const Icon(Icons.light_mode_outlined, color: Colors.white), onPressed: () {}),
@@ -131,7 +138,12 @@ class _BibleHomeState extends State<BibleHome> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator(color: goldText));
           } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('డేటా లోడ్ అవ్వలేదు.', style: TextStyle(color: Colors.white)));
+            return Center(
+              child: Text(
+                'డేటా లోడ్ అవ్వలేదు.', 
+                style: GoogleFonts.balooTammudu2(color: Colors.white, fontSize: 16),
+              ),
+            );
           }
 
           return Column(
@@ -176,8 +188,9 @@ class _BibleHomeState extends State<BibleHome> {
                               child: Center(
                                 child: Text(
                                   getTeluguName(book.bname),
-                                  style: TextStyle(
-                                    fontSize: 16, color: isSelected ? goldText : greyText,
+                                  style: GoogleFonts.balooTammudu2(
+                                    fontSize: 16, 
+                                    color: isSelected ? goldText : greyText,
                                     fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                                   ),
                                 ),
@@ -209,8 +222,9 @@ class _BibleHomeState extends State<BibleHome> {
                               child: Center(
                                 child: Text(
                                   chapter.cnumber,
-                                  style: TextStyle(
-                                    fontSize: 16, color: isSelected ? goldText : greyText,
+                                  style: GoogleFonts.balooTammudu2(
+                                    fontSize: 16, 
+                                    color: isSelected ? goldText : greyText,
                                     fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                                   ),
                                 ),
@@ -235,7 +249,6 @@ class _BibleHomeState extends State<BibleHome> {
                               setState(() {
                                 selectedVerse = verse;
                               });
-                              // వచనం క్లిక్ చేయగానే పూర్తి చాప్టర్ చదవడానికి వెళ్తాము
                               _openReadingScreen(verse);
                             },
                             child: Container(
@@ -243,8 +256,9 @@ class _BibleHomeState extends State<BibleHome> {
                               child: Center(
                                 child: Text(
                                   verse.vnumber,
-                                  style: TextStyle(
-                                    fontSize: 16, color: isSelected ? goldText : greyText,
+                                  style: GoogleFonts.balooTammudu2(
+                                    fontSize: 16, 
+                                    color: isSelected ? goldText : greyText,
                                     fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                                   ),
                                 ),
@@ -267,9 +281,13 @@ class _BibleHomeState extends State<BibleHome> {
           color: Colors.black, border: Border(top: BorderSide(color: dividerColor, width: 1)),
         ),
         child: BottomNavigationBar(
-          backgroundColor: Colors.black, type: BottomNavigationBarType.fixed, currentIndex: 1,
-          selectedItemColor: Colors.white, unselectedItemColor: greyText,
-          selectedFontSize: 10, unselectedFontSize: 10,
+          backgroundColor: Colors.black, 
+          type: BottomNavigationBarType.fixed, 
+          currentIndex: 1,
+          selectedItemColor: Colors.white, 
+          unselectedItemColor: greyText,
+          selectedLabelStyle: GoogleFonts.balooTammudu2(fontSize: 10),
+          unselectedLabelStyle: GoogleFonts.balooTammudu2(fontSize: 10),
           items: const [
             BottomNavigationBarItem(icon: Padding(padding: EdgeInsets.only(bottom: 4), child: Icon(Icons.home_outlined)), label: 'HOME'),
             BottomNavigationBarItem(icon: Padding(padding: EdgeInsets.only(bottom: 4), child: Icon(Icons.menu_book)), label: 'BIBLE'),
@@ -282,9 +300,6 @@ class _BibleHomeState extends State<BibleHome> {
   }
 }
 
-// ---------------------------------------------------------
-// కొత్తగా యాడ్ చేసిన Reading Screen (ఇక్కడే పూర్తి అధ్యాయం చదువుకోవచ్చు)
-// ---------------------------------------------------------
 class BibleReadingScreen extends StatefulWidget {
   final BibleBook book;
   final Chapter chapter;
@@ -309,7 +324,6 @@ class _BibleReadingScreenState extends State<BibleReadingScreen> {
   @override
   void initState() {
     super.initState();
-    // స్క్రీన్ లోడ్ అవ్వగానే యూజర్ సెలెక్ట్ చేసిన వచనం దగ్గరికి స్క్రోల్ అవుతుంది
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToVerse(widget.initialVerse.vnumber);
     });
@@ -322,7 +336,7 @@ class _BibleReadingScreenState extends State<BibleReadingScreen> {
         key.currentContext!,
         duration: const Duration(milliseconds: 600),
         curve: Curves.easeInOut,
-        alignment: 0.15, // పైన కొంచెం గ్యాప్ ఇస్తుంది
+        alignment: 0.15, 
       );
     }
   }
@@ -335,10 +349,10 @@ class _BibleReadingScreenState extends State<BibleReadingScreen> {
         backgroundColor: Colors.black,
         title: Text(
           '${widget.teluguBookName} ${widget.chapter.cnumber}', 
-          style: const TextStyle(color: Color(0xFFE5A853), letterSpacing: 1.0)
+          style: GoogleFonts.balooTammudu2(color: const Color(0xFFE5A853), letterSpacing: 1.0, fontSize: 22),
         ),
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white), // బ్యాక్ బటన్ కలర్
+        iconTheme: const IconThemeData(color: Colors.white), 
       ),
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
@@ -363,11 +377,11 @@ class _BibleReadingScreenState extends State<BibleReadingScreen> {
             padding: const EdgeInsets.only(left: 12.0, top: 4.0, bottom: 4.0),
             child: RichText(
               text: TextSpan(
-                style: const TextStyle(fontSize: 18, color: Color(0xFFE0E0E0), height: 1.7),
+                style: GoogleFonts.balooTammudu2(fontSize: 18, color: const Color(0xFFE0E0E0), height: 1.7),
                 children: [
                   TextSpan(
                     text: '${verse.vnumber}  ',
-                    style: TextStyle(
+                    style: GoogleFonts.balooTammudu2(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: isHighlighted ? const Color(0xFFE5A853) : const Color(0xFFE5A853).withOpacity(0.7),
