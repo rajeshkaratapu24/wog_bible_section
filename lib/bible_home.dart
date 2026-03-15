@@ -93,31 +93,21 @@ class _BibleHomeState extends State<BibleHome> {
     );
   }
 
-  void _showVerseDialog(Verse verse) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: headerBoxColor,
-          title: Text(
-            '${getTeluguName(selectedBook?.bname ?? "")} ${selectedChapter?.cnumber}:${verse.vnumber}',
-            style: TextStyle(color: goldText),
+  // రీడింగ్ స్క్రీన్ కి వెళ్ళడానికి ఫంక్షన్
+  void _openReadingScreen(Verse initialVerse) {
+    if (selectedBook != null && selectedChapter != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BibleReadingScreen(
+            book: selectedBook!,
+            chapter: selectedChapter!,
+            initialVerse: initialVerse,
+            teluguBookName: getTeluguName(selectedBook!.bname),
           ),
-          content: SingleChildScrollView(
-            child: Text(
-              verse.text,
-              style: const TextStyle(color: Colors.white, fontSize: 18, height: 1.5),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('Close', style: TextStyle(color: goldText)),
-            ),
-          ],
-        );
-      },
-    );
+        ),
+      );
+    }
   }
 
   @override
@@ -140,13 +130,7 @@ class _BibleHomeState extends State<BibleHome> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator(color: goldText));
-          } else if (snapshot.hasError) {
-            // ఎర్రర్ ఉంటే స్క్రీన్ మీద చూపిస్తుంది
-            return Center(child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.red)),
-            ));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('డేటా లోడ్ అవ్వలేదు.', style: TextStyle(color: Colors.white)));
           }
 
@@ -251,7 +235,8 @@ class _BibleHomeState extends State<BibleHome> {
                               setState(() {
                                 selectedVerse = verse;
                               });
-                              _showVerseDialog(verse); // వచనం చదవడానికి పాపప్
+                              // వచనం క్లిక్ చేయగానే పూర్తి చాప్టర్ చదవడానికి వెళ్తాము
+                              _openReadingScreen(verse);
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 20),
@@ -292,6 +277,108 @@ class _BibleHomeState extends State<BibleHome> {
             BottomNavigationBarItem(icon: Padding(padding: EdgeInsets.only(bottom: 4), child: Icon(Icons.album_outlined)), label: 'TRACK'),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------
+// కొత్తగా యాడ్ చేసిన Reading Screen (ఇక్కడే పూర్తి అధ్యాయం చదువుకోవచ్చు)
+// ---------------------------------------------------------
+class BibleReadingScreen extends StatefulWidget {
+  final BibleBook book;
+  final Chapter chapter;
+  final Verse initialVerse;
+  final String teluguBookName;
+
+  const BibleReadingScreen({
+    super.key,
+    required this.book,
+    required this.chapter,
+    required this.initialVerse,
+    required this.teluguBookName,
+  });
+
+  @override
+  State<BibleReadingScreen> createState() => _BibleReadingScreenState();
+}
+
+class _BibleReadingScreenState extends State<BibleReadingScreen> {
+  final Map<String, GlobalKey> verseKeys = {};
+
+  @override
+  void initState() {
+    super.initState();
+    // స్క్రీన్ లోడ్ అవ్వగానే యూజర్ సెలెక్ట్ చేసిన వచనం దగ్గరికి స్క్రోల్ అవుతుంది
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToVerse(widget.initialVerse.vnumber);
+    });
+  }
+
+  void _scrollToVerse(String vnumber) {
+    final key = verseKeys[vnumber];
+    if (key != null && key.currentContext != null) {
+      Scrollable.ensureVisible(
+        key.currentContext!,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOut,
+        alignment: 0.15, // పైన కొంచెం గ్యాప్ ఇస్తుంది
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF121212),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text(
+          '${widget.teluguBookName} ${widget.chapter.cnumber}', 
+          style: const TextStyle(color: Color(0xFFE5A853), letterSpacing: 1.0)
+        ),
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white), // బ్యాక్ బటన్ కలర్
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+        itemCount: widget.chapter.verses.length,
+        itemBuilder: (context, index) {
+          final verse = widget.chapter.verses[index];
+          verseKeys[verse.vnumber] ??= GlobalKey();
+          
+          bool isHighlighted = verse.vnumber == widget.initialVerse.vnumber;
+
+          return Container(
+            key: verseKeys[verse.vnumber],
+            margin: const EdgeInsets.only(bottom: 16.0),
+            decoration: isHighlighted
+                ? BoxDecoration(
+                    color: const Color(0xFFE5A853).withOpacity(0.1),
+                    border: const Border(left: BorderSide(color: Color(0xFFE5A853), width: 3)),
+                  )
+                : const BoxDecoration(
+                    border: Border(left: BorderSide(color: Colors.transparent, width: 3)),
+                  ),
+            padding: const EdgeInsets.only(left: 12.0, top: 4.0, bottom: 4.0),
+            child: RichText(
+              text: TextSpan(
+                style: const TextStyle(fontSize: 18, color: Color(0xFFE0E0E0), height: 1.7),
+                children: [
+                  TextSpan(
+                    text: '${verse.vnumber}  ',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: isHighlighted ? const Color(0xFFE5A853) : const Color(0xFFE5A853).withOpacity(0.7),
+                    ),
+                  ),
+                  TextSpan(text: verse.text),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
