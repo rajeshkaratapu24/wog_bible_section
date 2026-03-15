@@ -16,12 +16,11 @@ class _BibleHomeState extends State<BibleHome> {
   Chapter? selectedChapter;
   Verse? selectedVerse;
 
-  // Colors exactly matching your screenshot
-  final Color bgColor = const Color(0xFF121212); // Deep Black Background
-  final Color headerBoxColor = const Color(0xFF1E1E1E); // Dark Grey for selection boxes
-  final Color goldText = const Color(0xFFE5A853); // Gold color for selected text
-  final Color greyText = const Color(0xFF7A7A7A); // Grey for unselected text
-  final Color dividerColor = const Color(0xFF2A2A2A); // Faint line color
+  final Color bgColor = const Color(0xFF121212); 
+  final Color headerBoxColor = const Color(0xFF1E1E1E); 
+  final Color goldText = const Color(0xFFE5A853); 
+  final Color greyText = const Color(0xFF7A7A7A); 
+  final Color dividerColor = const Color(0xFF2A2A2A); 
 
   final Map<String, String> teluguBookNames = {
     'Genesis': 'ఆదికాండము', 'Exodus': 'నిర్గమకాండము', 'Leviticus': 'లేవీయకాండము',
@@ -57,7 +56,7 @@ class _BibleHomeState extends State<BibleHome> {
   void initState() {
     super.initState();
     futureBibleBooks = loadBibleData().then((books) {
-      if (books.isNotEmpty) {
+      if (mounted && books.isNotEmpty) {
         setState(() {
           allBooks = books;
           selectedBook = books.first;
@@ -94,28 +93,45 @@ class _BibleHomeState extends State<BibleHome> {
     );
   }
 
+  void _showVerseDialog(Verse verse) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: headerBoxColor,
+          title: Text(
+            '${getTeluguName(selectedBook?.bname ?? "")} ${selectedChapter?.cnumber}:${verse.vnumber}',
+            style: TextStyle(color: goldText),
+          ),
+          content: SingleChildScrollView(
+            child: Text(
+              verse.text,
+              style: const TextStyle(color: Colors.white, fontSize: 18, height: 1.5),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Close', style: TextStyle(color: goldText)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
-      // 1. Exact Custom App Bar
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          onPressed: () {},
-        ),
-        title: const Text(
-          'W   O   G',
-          style: TextStyle(color: Colors.white, fontSize: 20, letterSpacing: 2.0),
-        ),
+        leading: IconButton(icon: const Icon(Icons.menu, color: Colors.white), onPressed: () {}),
+        title: const Text('W   O   G', style: TextStyle(color: Colors.white, fontSize: 20, letterSpacing: 2.0)),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.light_mode_outlined, color: Colors.white),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.light_mode_outlined, color: Colors.white), onPressed: () {}),
         ],
       ),
       
@@ -124,13 +140,18 @@ class _BibleHomeState extends State<BibleHome> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator(color: goldText));
-          } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+          } else if (snapshot.hasError) {
+            // ఎర్రర్ ఉంటే స్క్రీన్ మీద చూపిస్తుంది
+            return Center(child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.red)),
+            ));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('డేటా లోడ్ అవ్వలేదు.', style: TextStyle(color: Colors.white)));
           }
 
           return Column(
             children: [
-              // 2. Top Selected Items Header Row
               Container(
                 color: bgColor,
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
@@ -147,7 +168,6 @@ class _BibleHomeState extends State<BibleHome> {
               
               Divider(height: 1, color: dividerColor, thickness: 1),
 
-              // 3. Three-Column Selector Lists
               Expanded(
                 child: Row(
                   children: [
@@ -173,8 +193,7 @@ class _BibleHomeState extends State<BibleHome> {
                                 child: Text(
                                   getTeluguName(book.bname),
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    color: isSelected ? goldText : greyText,
+                                    fontSize: 16, color: isSelected ? goldText : greyText,
                                     fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                                   ),
                                 ),
@@ -184,8 +203,7 @@ class _BibleHomeState extends State<BibleHome> {
                         },
                       ),
                     ),
-                    
-                    Container(width: 1, color: dividerColor), // Vertical Line
+                    Container(width: 1, color: dividerColor),
 
                     // --- CHAPTERS COLUMN ---
                     Expanded(
@@ -208,8 +226,7 @@ class _BibleHomeState extends State<BibleHome> {
                                 child: Text(
                                   chapter.cnumber,
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    color: isSelected ? goldText : greyText,
+                                    fontSize: 16, color: isSelected ? goldText : greyText,
                                     fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                                   ),
                                 ),
@@ -219,8 +236,7 @@ class _BibleHomeState extends State<BibleHome> {
                         },
                       ),
                     ),
-
-                    Container(width: 1, color: dividerColor), // Vertical Line
+                    Container(width: 1, color: dividerColor),
 
                     // --- VERSES COLUMN ---
                     Expanded(
@@ -235,6 +251,7 @@ class _BibleHomeState extends State<BibleHome> {
                               setState(() {
                                 selectedVerse = verse;
                               });
+                              _showVerseDialog(verse); // వచనం చదవడానికి పాపప్
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 20),
@@ -242,8 +259,7 @@ class _BibleHomeState extends State<BibleHome> {
                                 child: Text(
                                   verse.vnumber,
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    color: isSelected ? goldText : greyText,
+                                    fontSize: 16, color: isSelected ? goldText : greyText,
                                     fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                                   ),
                                 ),
@@ -261,37 +277,19 @@ class _BibleHomeState extends State<BibleHome> {
         },
       ),
 
-      // 4. Exact Custom Bottom Navigation Bar
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.black,
-          border: Border(top: BorderSide(color: dividerColor, width: 1)),
+          color: Colors.black, border: Border(top: BorderSide(color: dividerColor, width: 1)),
         ),
         child: BottomNavigationBar(
-          backgroundColor: Colors.black,
-          type: BottomNavigationBarType.fixed,
-          currentIndex: 1, // BIBLE is selected
-          selectedItemColor: Colors.white,
-          unselectedItemColor: greyText,
-          selectedFontSize: 10,
-          unselectedFontSize: 10,
+          backgroundColor: Colors.black, type: BottomNavigationBarType.fixed, currentIndex: 1,
+          selectedItemColor: Colors.white, unselectedItemColor: greyText,
+          selectedFontSize: 10, unselectedFontSize: 10,
           items: const [
-            BottomNavigationBarItem(
-              icon: Padding(padding: EdgeInsets.only(bottom: 4), child: Icon(Icons.home_outlined)),
-              label: 'HOME',
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(padding: EdgeInsets.only(bottom: 4), child: Icon(Icons.menu_book)),
-              label: 'BIBLE',
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(padding: EdgeInsets.only(bottom: 4), child: Icon(Icons.music_note_outlined)),
-              label: 'SONGS',
-            ),
-            BottomNavigationBarItem(
-              icon: Padding(padding: EdgeInsets.only(bottom: 4), child: Icon(Icons.album_outlined)),
-              label: 'TRACK',
-            ),
+            BottomNavigationBarItem(icon: Padding(padding: EdgeInsets.only(bottom: 4), child: Icon(Icons.home_outlined)), label: 'HOME'),
+            BottomNavigationBarItem(icon: Padding(padding: EdgeInsets.only(bottom: 4), child: Icon(Icons.menu_book)), label: 'BIBLE'),
+            BottomNavigationBarItem(icon: Padding(padding: EdgeInsets.only(bottom: 4), child: Icon(Icons.music_note_outlined)), label: 'SONGS'),
+            BottomNavigationBarItem(icon: Padding(padding: EdgeInsets.only(bottom: 4), child: Icon(Icons.album_outlined)), label: 'TRACK'),
           ],
         ),
       ),
