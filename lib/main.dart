@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'bible_home.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const WOGBibleApp());
 }
 
@@ -12,17 +13,13 @@ class WOGBibleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'WOG Bible',
+      title: 'WOG',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: Colors.black, // Black Theme
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.black87,
-          elevation: 0,
-        ),
-        // Ramabhadra Telugu Font అప్లై చేయడం
-        textTheme: GoogleFonts.ramabhadraTextTheme(
+        scaffoldBackgroundColor: const Color(0xFF121212), // Deep Black
+        // యాప్ మొత్తం Baloo Tammudu 2 ఫాంట్ అప్లై చేయడానికి
+        textTheme: GoogleFonts.balooTammudu2TextTheme(
           Theme.of(context).textTheme.apply(
             bodyColor: Colors.white,
             displayColor: Colors.white,
