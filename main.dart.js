@@ -26041,7 +26041,7 @@ $S:2}
 A.aoD.prototype={
 $1(a){var s=A.d4().b
 s=s==null?null:s.canvasKitBaseUrl
-return(s==null?"https://www.gstatic.com/flutter-canvaskit/e4b8dca3f1b4ede4c30371002441c88c12187ed6/":s)+a},
+return(s==null?"https://www.gstatic.com/flutter-canvaskit/052f31d115eceda8cbff1b3481fcde4330c4ae12/":s)+a},
 $S:83}
 A.Hw.prototype={
 TE(){var s=this.a7Y(),r=$.b2.bo().ImageFilter.MakeColorFilter(s,null)
