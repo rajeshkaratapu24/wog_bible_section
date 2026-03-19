@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="te" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>నిర్గమకాండము - పరిచయం & విశ్లేషణ</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Telugu:wght@300;400;500;600;700;800&family=Mallanna&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'body': ['"Mallanna"', 'serif'],        
+                        'heading': ['"Anek Telugu"', 'sans-serif'],
+                        'brand': ['"Cinzel"', 'serif'],
+                    },
+                    colors: {
+                        gold: {
+                            400: '#facc15', // Bright Gold
+                            500: '#eab308', // Classic Gold
+                            600: '#ca8a04', // Deep Gold
+                        },
+                        paper: '#fffaf0', // Warm White
+                        bible: '#854d0e', // Leather Brown
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* --- TYPOGRAPHY SYSTEM --- */
+        :root {
+            --content-size: 20px;
+            --line-height: 2.2;
+        }
+
+        html { scroll-behavior: smooth; }
+        
+        body { 
+            background-color: var(--paper); 
+            color: #292524;
+            font-family: 'Mallanna', serif;
+            line-height: var(--line-height);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .content-text { font-size: var(--content-size); }
+        h1, h2, h3, h4, .ref-title, .brand-text { font-family: 'Anek Telugu', sans-serif; }
+
+        /* --- DARK MODE RULES --- */
+        html.dark body { background-color: #0c0a09 !important; color: #e7e5e4 !important; }
+        html.dark .content-text, html.dark p, html.dark li { color: #d6d3d1 !important; }
+        html.dark h1, html.dark h2, html.dark h3, html.dark strong { color: #facc15 !important; }
+        html.dark .verse-card { background-color: #1c1917 !important; border-left-color: #facc15 !important; }
+        html.dark .info-grid { background-color: #1c1917 !important; border-color: #444 !important; }
+        html.dark .christ-box { background-color: #422006 !important; border-color: #ca8a04 !important; }
+
+        /* --- COMPONENTS --- */
+        .brand-badge {
+            position: fixed; top: 20px; right: 20px; z-index: 60;
+            background: #000; color: #facc15;
+            padding: 8px 16px; font-family: 'Cinzel', serif; font-weight: bold;
+            border: 2px solid #facc15; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .hero {
+            height: 70vh;
+            /* Changed to Red Sea / Desert theme */
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover; background-position: center; background-attachment: fixed;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; color: white;
+        }
+
+        /* Stats Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid #e7e5e4;
+            margin-bottom: 3rem;
+        }
+        .info-item h4 { font-size: 0.8rem; text-transform: uppercase; color: #854d0e; letter-spacing: 0.1em; }
+        .info-item p { font-size: 1.2rem; font-weight: bold; color: #000; font-family: 'Anek Telugu'; }
+        html.dark .info-item h4 { color: #facc15; }
+        html.dark .info-item p { color: #fff; }
+
+        /* Commentary Block Structure */
+        .commentary-block { margin-bottom: 4rem; }
+        
+        .explanation-text {
+            font-size: 1.1em;
+            color: #44403c;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid transparent;
+            padding-left: 0;
+            line-height: 1.8;
+        }
+        html.dark .explanation-text { color: #a8a29e; }
+
+        /* Verse Card */
+        .verse-card {
+            background: #fff;
+            border-left: 6px solid #ea580c; /* Orange accent */
+            padding: 25px 30px;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            font-style: italic;
+            position: relative;
+        }
+        .verse-ref {
+            position: absolute; top: -12px; left: 20px;
+            background: #ea580c; color: white;
+            padding: 4px 12px; font-size: 0.8rem; font-weight: bold;
+            border-radius: 4px; font-family: 'Anek Telugu';
+        }
+        html.dark .verse-ref { background: #facc15; color: #000; }
+
+        /* Christology Box */
+        .christ-box {
+            background: #fffbeb;
+            border: 2px solid #fcd34d;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 3rem 0;
+        }
+
+        .drop-cap {
+            float: left; font-size: 4.5rem; line-height: 0.8;
+            margin-right: 1rem; margin-top: 0.2rem;
+            font-family: 'Anek Telugu'; font-weight: 800; color: #ea580c;
+        }
+        
+        #reading-progress {
+            position: fixed; top: 0; left: 0; height: 5px;
+            background: linear-gradient(to right, #ea580c, #facc15);
+            width: 0%; z-index: 200;
+        }
+        
+        .toolbar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 380px;
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);
+            border: 1px solid rgba(0,0,0,0.1); border-radius: 50px;
+            padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 100;
+        }
+        html.dark .toolbar { background: rgba(30,30,30,0.85); border: 1px solid #444; }
+    </style>
+</head>
+<body class="pb-40">
+
+    <div class="brand-badge">WOG</div>
+    <div id="reading-progress"></div>
+
+    <!-- HERO -->
+    <header class="hero">
+        <span class="inline-block py-2 px-6 border border-white/40 rounded-full text-sm font-bold uppercase tracking-[0.3em] mb-8 bg-black/30 backdrop-blur-md">
+            The Second Book of Moses
+        </span>
+        <h1 class="text-6xl md:text-9xl font-black mb-6 drop-shadow-2xl tracking-tight leading-none" style="font-family: 'Anek Telugu'">
+            నిర్గమకాండము
+        </h1>
+        <p class="text-xl md:text-3xl font-light italic max-w-4xl px-4 text-white/90" style="font-family: 'Mallanna'">
+            "నేను ఉన్నవాడను అను వాడనై యున్నాను" (I AM WHO I AM)
+        </p>
+    </header>
+
+    <main id="main-content" class="content-text max-w-4xl mx-auto px-6 py-16">
+
+        <!-- INFO GRID -->
+        <section class="info-grid">
+            <div class="info-item">
+                <h4>రచయిత</h4>
+                <p>మోషే</p>
+            </div>
+            <div class="info-item">
+                <h4>కాలం</h4>
+                <p>క్రీ.పూ. 1446-1406</p>
+            </div>
+            <div class="info-item">
+                <h4>స్థలం</h4>
+                <p>ఐగుప్తు నుండి సీనాయి</p>
+            </div>
+            <div class="info-item">
+                <h4>అధ్యాయాలు</h4>
+                <p>40</p>
+            </div>
+            <div class="info-item">
+                <h4>కీలక అంశం</h4>
+                <p>విమోచన (Redemption)</p>
+            </div>
+        </section>
+
+        <!-- INTRO -->
+        <article class="mb-16">
+            <h2 class="text-4xl font-bold mb-6 text-orange-900 dark:text-gold-500 pb-4 border-b-2 border-orange-200 dark:border-gray-800">
+                ఈ పుస్తకాన్ని ఎందుకు చదవాలి?
+            </h2>
+            <p>
+                <span class="drop-cap">ని</span>ర్గమకాండము (Exodus) అంటే "బయటకు వెళ్ళుట". ఆదికాండములో ఒక కుటుంబంగా (యాకోబు కుటుంబం) ఐగుప్తుకు వెళ్ళిన ఇశ్రాయేలీయులు, నిర్గమకాండములో ఒక గొప్ప జనాంగంగా బానిసత్వం నుండి బయటకు వస్తారు. దేవుడు తన ప్రజలను బానిసత్వం నుండి ఎలా విడిపించాడు? ఆరాధన అంటే ఏమిటి? దేవుని న్యాయశాస్త్రం (Ten Commandments) మనకు ఎందుకు అవసరం? అనే ప్రశ్నలకు ఇందులో సమాధానం దొరుకుతుంది. ఇది కేవలం చరిత్ర కాదు; ఇది పాపం అనే బానిసత్వం నుండి దేవుడు మనల్ని ఎలా విడిపిస్తాడో చెప్పే గొప్ప ఆత్మీయ చిత్రం.
+            </p>
+        </article>
+
+        <!-- CHRIST IN EXODUS -->
+        <div class="christ-box">
+            <h3 class="text-2xl font-bold mb-4 flex items-center gap-2 text-orange-800 dark:text-gold-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg>
+                క్రీస్తును ఎక్కడ వెతకాలి?
+            </h3>
+            <p class="mb-4 text-sm opacity-80">నిర్గమకాండములో క్రీస్తు ఛాయలు చాలా స్పష్టంగా కనిపిస్తాయి. వీటిని గమనించండి:</p>
+            <ul class="space-y-3 list-none">
+                <li class="flex gap-3">
+                    <span class="font-bold text-orange-600 dark:text-gold-500">➤ పస్కా గొర్రెపిల్ల (12):</span>
+                    <span>మన పాపాల కోసం బలి ఇవ్వబడిన నిష్కళంకమైన గొర్రెపిల్ల క్రీస్తు.</span>
+                </li>
+                <li class="flex gap-3">
+                    <span class="font-bold text-orange-600 dark:text-gold-500">➤ మన్నా (16):</span>
+                    <span>పరలోకం నుండి దిగివచ్చిన జీవాహారం (యోహాను 6).</span>
+                </li>
+                <li class="flex gap-3">
+                    <span class="font-bold text-orange-600 dark:text-gold-500">➤ బండ (17):</span>
+                    <span>ఎడారిలో జీవజలమిచ్చిన బండ క్రీస్తే (1 కొరింథీ 10:4).</span>
+                </li>
+                <li class="flex gap-3">
+                    <span class="font-bold text-orange-600 dark:text-gold-500">➤ ప్రత్యక్ష గుడారం (25-40):</span>
+                    <span>దేవుడు మనుషుల మధ్య నివసించడం (క్రీస్తు శరీరానికి సాదృశ్యం).</span>
+                </li>
+            </ul>
+        </div>
+
+        <hr class="border-orange-200 dark:border-gray-800 my-12">
+
+        <!-- PART 1: SLAVERY TO DELIVERANCE -->
+        <h3 class="text-3xl font-bold mb-10 text-orange-800 dark:text-gold-400">భాగం 1: బానిసత్వం నుండి విమోచన (అధ్యాయాలు 1-18)</h3>
+        
+        <p class="mb-8">చరిత్ర ఇక్కడే మొదలవుతుంది. బాధ నుంచే విమోచన మొదలైంది.
+ఇటుకల భారంతో నలిగిన దేవుని ప్రజలు దాస్య జీవితాన్ని గడిపారు.
+వారి నిట్టూర్పులు, కన్నీళ్లు పరలోకానికి చేరాయి.
+ఆ ఆర్తనాదాలే దేవుని రక్షణ కార్యానికి ఆరంభమయ్యాయి.</p>
+
+        <!-- Block 1 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">1. మర్చిపోయిన రాజు</h4>
+            <p class="explanation-text">
+                యోసేపు చేసిన మేలును మర్చిపోయిన కొత్త ఫరో ఐగుప్తులో రాజయ్యాడు.
+లోకం కాలంతో పాటు మనలను కూడా మర్చిపోతుంది.
+మన మేలును గుర్తించని పరిస్థితులు వస్తాయి.
+దేవుని ప్రజలకు శ్రమలు రావడం కొత్తది కాదు.
+ఇశ్రాయేలు శ్రమలలో బానిసలుగా జీవించారు.
+ఆ బానిసత్వం పాపానికి సాదృశ్యంగా కనిపిస్తుంది.
+అయినా దేవుడు తన ప్రజలను విడువక నిలిచాడు.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 1:8</span>
+                "అప్పుడు యోసేపును ఎరుగని క్రొత్త రాజు ఐగుప్తును ఏల నారంభించెను."
+            </div>
+        </div>
+
+        <!-- Block 2 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">2. కన్నీళ్లు వృధా పోవు</h4>
+            <p class="explanation-text">
+               శ్రమలు అత్యంతంగా పెరిగినప్పుడు ప్రజలు దేవునికి మొరపెట్టారు.
+బాధలో ఉన్న హృదయాల నుండి వచ్చిన మూలుగు పరలోకానికి చేరింది.
+దేవుడు మన కష్టాలను కేవలం చూడడమే కాదు, మన మొరను ఆలకిస్తాడు.
+వారి ఆర్తనాదం ఆయన హృదయాన్ని కదిలించింది.
+అప్పుడు దేవుడు తన ప్రజలతో చేసిన నిబంధనను జ్ఞాపకం చేసుకున్నాడు.
+అబ్రాహాము, ఇస్సాకు, యాకోబులతో చేసిన వాగ్దానాలు ఆయనకు గుర్తొచ్చాయి.
+అక్కడే విమోచన కథ స్పష్టంగా మొదలైంది.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 2:24</span>
+                "దేవుడు వారి మూలుగును విని, అబ్రాహాము ఇస్సాకు యాకోబులతో తాను చేసిన నిబంధనను జ్ఞాపకము చేసికొనెను."
+            </div>
+        </div>
+
+        <!-- Block 3 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">3. నీటిలో నుండి తీయబడినవాడు</h4>
+            <p class="explanation-text">
+                సాతాను రూపమైన ఫరో మగపిల్లలను సంహరించాలనుకున్నాడు.
+నాశనానికి ఉద్దేశించిన అదే నది దేవుని చేతిలో రక్షణ సాధనమైంది.
+ఒక చిన్న బుట్టలో దేవుడు రక్షకుడిని దాచాడు.
+ఆ బిడ్డే తరువాత విమోచనకర్తగా నిలిచాడు — మోషే.
+శత్రువు ఇంట్లోనే దేవుడు తన సేవకుడిని పెంచాడు.
+మనుష్యుల కుట్రల మధ్య దేవుని కాపాడే చేయి పనిచేసింది.
+దేవుని ప్రణాళిక ఎల్లప్పుడూ అద్భుతమైనదే.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 2:10</span>
+                "ఆమె - నేను నీళ్లలోనుండి ఇతని తీసితినని చెప్పి, అతనికి మోషే అను పేరు పెట్టెను."
+            </div>
+        </div>
+
+        <!-- Block 4 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">4. మండుచున్న పొద - దేవుని పిలుపు</h4>
+            <p class="explanation-text">
+                ఎనభై ఏళ్ల వయసులో మోషే అరణ్యంలో గొర్రెలు కాచుకుంటూ జీవించాడు.
+తన జీవితం అంతా అయిపోయిందని అతడు అనుకున్నాడు.
+అలాంటి సమయంలోనే దేవుడు కాలిపోని పొదలో అతనికి ప్రత్యక్షమయ్యాడు.
+అగ్నిజ్వాలలో కనిపించినా ఆ పొద కాలిపోలేదు.
+దేవుని పిలుపు ఆలస్యం అయినట్లు కనిపించినా, అది ఎప్పుడూ తప్పదు.
+వయసు, స్థితి, కాలం దేవునికి అడ్డుకావు.
+దేవుడు ఎప్పుడైనా, ఎవరినైనా తన కార్యానికి వాడుకోగలడు.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 3:2</span>
+                "యెహోవా దూత ఒక పొద నడిమిని అగ్నిజ్వాలలో అతనికి ప్రత్యక్షమాయెను... ఆ పొద అగ్నిచేత కాలుచుండెను గాని అది కాలిపోలేదు."
+            </div>
+        </div>
+
+        <!-- Block 5 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">5. దేవుని పేరు (I AM)</h4>
+            <p class="explanation-text">
+                మోషే దేవునిని ధైర్యంగా “నీ పేరేంటి?” అని అడిగాడు.
+దేవుడు తనను తాను “నేను ఉన్నవాడను అనువాడనై యున్నాను” అని ప్రకటించాడు.
+ఈ నామం దేవునికి ఆరంభం లేదని వెల్లడిస్తుంది.
+అలాగే ఆయనకు అంతం కూడా లేదని తెలియజేస్తుంది.
+ఆయన ఎవరి మీద ఆధారపడని స్వయంభువుడు.
+కాలానికి, పరిస్థితులకు అతీతుడైన నిత్యుడైన దేవుడు ఆయన.
+ఈ ప్రకటన దేవుని నిత్యత్వాన్ని, అచంచలమైన స్వభావాన్ని చూపిస్తుంది.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 3:14</span>
+                "అందుకు దేవుడు - నేను ఉన్నవాడను అను వాడనై యున్నానని మోషేతో చెప్పెను."
+            </div>
+        </div>
+
+        <!-- Block 6 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">6. సంశయించిన నాయకుడు</h4>
+            <p class="explanation-text">
+               మోషే దేవుని పిలుపు ముందు భయపడ్డాడు.
+“నేను నత్తివాడను”, “వాళ్లు నన్ను నమ్మరు” అని సాకులు చెప్పాడు.
+తన బలహీనతలనే ముందుకు తెచ్చాడు.
+అప్పుడు దేవుడు అతనితో “నీ నోటికి నేను తోడైయుందును” అని చెప్పాడు.
+దేవుని కార్యానికి సంపూర్ణ సామర్థ్యం అవసరం కాలేదు.
+ఆయన మన ప్రతిభను కాదు, మన లభ్యతను కోరుకున్నాడు.
+లభ్యమైన హృదయాన్ని దేవుడు శక్తివంతంగా ఉపయోగిస్తాడు.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 4:12</span>
+                "కాబట్టి వెళ్లుము; నేను నీ నోటికి తోడైయుండి, నీవు ఏమి పలుకవలసినది నీకు బోధించెదను."
+            </div>
+        </div>
+
+        <!-- Block 7 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">7. నా ప్రజలను పోనిమ్ము</h4>
+            <p class="explanation-text">
+                ఇది దేవుడు ఫరోకు ఇచ్చిన స్పష్టమైన ఆజ్ఞ.
+దేవుని ప్రజలు బానిసలుగా ఉండాలని ఆయన కోరలేదు.
+బానిసత్వం వారి గమ్యం కాదు, అది తాత్కాలిక స్థితి మాత్రమే.
+వారు దేవుని ఆరాధించడానికి ప్రత్యేకంగా పిలువబడ్డారు.
+విముక్తి ఆరాధనకు ముందడుగు అని దేవుడు ప్రకటించాడు.
+పాపం నుండి మన విడుదల కూడా స్వేచ్ఛ కోసం మాత్రమే కాదు.
+దేవునిని ఆరాధించే జీవితం కోసం ఆయన మనలను విడుదల చేస్తాడు.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 5:1</span>
+                "ఇశ్రాయేలు దేవుడైన యెహోవా - అరణ్యములో నాకు ఉత్సవము చేయుటకు నా ప్రజలను పోనిమ్మని ఆజ్ఞాపించుచున్నాడు."
+            </div>
+        </div>
+
+        <!-- Block 8 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">8. ఐగుప్తు దేవతలపై యుద్ధం (10 తెగుళ్లు)</h4>
+            <p class="explanation-text">
+                పది తెగుళ్లు కేవలం శిక్షలు మాత్రమే కావు.
+అవి ఐగుప్తు దేవతలపై దేవుడు సాధించిన విజయ ప్రకటన.
+వారు పూజించిన నైలు నది రక్తమయ్యింది.
+వారు దేవతగా భావించిన సూర్యుడు చీకటిలో మునిగిపోయాడు.
+పశువులు, ప్రకృతి, శక్తులు — అన్నింటిపైనా దేవుడే అధిపతి అని తెలిసింది.
+ఐగుప్తు దేవతలన్నీ శూన్యమని దేవుడు నిరూపించాడు.
+యెహోవాయే ఏకైక నిజమైన దేవుడని ఈ తీర్పు స్పష్టంగా ప్రకటించింది.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 12:12</span>
+                "ఐగుప్తు దేవతలకందరికిని తీర్పు తీర్చెదను; నేను యెహోవాను."
+            </div>
+        </div>
+
+        <!-- Block 9 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">9. రక్తం చూచినప్పుడు (The Passover)</h4>
+            <p class="explanation-text">
+               మరణదూత వచ్చినప్పుడు, గొర్రెపిల్ల రక్తం రాసిన ఇళ్లను దాటివెళ్లాడు.
+ఆ రాత్రి రక్షణకు ఆధారం మనుష్యుల మంచితనం కాదు.
+వారు రక్తం కింద ఉన్నారా లేదా అనేదే అసలు విషయం.
+రక్తం ఉన్న చోట తీర్పు ఆగిపోయింది.
+దేవుని దృష్టి క్రియలపై కాదు, రక్తంపై నిలిచింది.
+ఇది రాబోయే గొప్ప రక్షణకు సాదృశ్యంగా నిలిచింది.
+యేసు క్రీస్తు రక్తం ద్వారా మనకు కలిగే రక్షణను ఇది స్పష్టంగా చూపిస్తుంది.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 12:13</span>
+                "నేను ఆ రక్తమును చూచి మిమ్మును దాటిపోవుదును."
+            </div>
+        </div>
+
+        <!-- Block 10 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">10. ఊరుకుండుడి - దేవుడే యుద్ధం చేస్తాడు</h4>
+            <p class="explanation-text">
+                ముందు ఎర్ర సముద్రం, వెనుక ఫరో సైన్యం — పరిస్థితి అసాధ్యంగా కనిపించింది.
+ఇశ్రాయేలీయులు భయంతో కంపించారు.
+ఏం చేయాలో తెలియక వారు నిలిచిపోయారు.
+అప్పుడు మోషే దేవుని వాక్యాన్ని ధైర్యంగా ప్రకటించాడు.
+“యెహోవా మీ పక్షమున యుద్ధము చేయును” అన్నాడు.
+మన శక్తి పూర్తిగా ముగిసిన చోట దేవుని కార్యం మొదలవుతుంది.
+మనం ఊరకుండగా, దేవుడే మన పక్షాన నిలబడి పోరాడతాడు.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 14:14</span>
+                "యెహోవా మీ పక్షమున యుద్ధము చేయును, మీరు ఊరకుండవలెను."
+            </div>
+        </div>
+
+        <!-- Block 11 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">11. సముద్రంలో దారి</h4>
+            <p class="explanation-text">
+                దేవుడు తన శక్తితో ఎర్ర సముద్రంను పాయలుగా చేశాడు.
+బలమైన తూర్పు గాలి చేత సముద్రం ఆరిన నేలగా మారింది.
+దేవుని ప్రజలు నీళ్ల మధ్యుగా సురక్షితంగా నడిచారు.
+ఇది బాప్తిస్మమునకు గొప్ప సాదృశ్యంగా నిలిచింది.
+1 కొరింథీయులకు 10వ అధ్యాయం ఈ సత్యాన్ని బోధిస్తుంది.
+పాత జీవితం — ఐగుప్తు బానిసత్వం — వెనుకే మిగిలిపోయింది.
+ముందు దేవునితో నడిచే కొత్త జీవితం ప్రారంభమైంది.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 14:21</span>
+                "యెహోవా ఆ రాత్రి అంతయు బలమైన తూర్పుగాలి చేత సముద్రమును తొలగించి, దానిని ఆరిన నేలగా చేసెను; నీళ్లు విభాగింపబడెను."
+            </div>
+        </div>
+
+        <!-- Block 12 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">12. ఆకాశం నుండి ఆహారం (మన్నా)</h4>
+            <p class="explanation-text">
+               అరణ్యంలో ఆహారం లేక ప్రజలు అసహనంతో సణిగారు.
+బానిసత్వం విడిచినా నమ్మకం ఇంకా బలహీనంగా ఉంది.
+అప్పుడు దేవుడు ఆకాశమునుండి ఆహారాన్ని కురిపించాడు.
+ఆ ఆహారానికి వారు “మన్నా” అని పేరు పెట్టారు — అంటే “ఇదేమిటి?”.
+ప్రతి దినం అవసరమైనంత మాత్రమే దేవుడు అందించాడు.
+ఇది శరీర ఆకలికే కాదు, ఆత్మీయ ఆకలికీ సంకేతమైంది.
+ఈ మన్నా మన ఆత్మీయ ఆకలిని తీర్చే **యేసు క్రీస్తు**కు సాదృశ్యంగా నిలిచింది.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 16:4</span>
+                "ఇదిగో నేను ఆకాశమునుండి మీకొరకు ఆహారమును కురిపించెదను."
+            </div>
+        </div>
+
+        <!-- Block 13 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">13. బండ నుండి నీళ్ళు</h4>
+            <p class="explanation-text">
+                అరణ్యంలో ప్రజలు తీవ్రమైన దాహంతో విలవిల్లాడారు.
+నీరు లేక వారు నిరాశలో దేవునిపై సణిగారు.
+అప్పుడు దేవుడు మోషేకు బండను కొట్టమని ఆజ్ఞ ఇచ్చాడు.
+ఆ బండ నుండి జీవజలం ప్రవహించింది.
+శారీరక దాహం మాత్రమే కాదు, ఆత్మీయ అవసరమూ తీరింది.
+పౌలు ఈ సత్యాన్ని వెల్లడిస్తూ “ఆ బండ క్రీస్తే” అని చెప్పాడు.
+మన ఆత్మీయ దాహాన్ని శాశ్వతంగా తీర్చేది యేసు క్రీస్తు మాత్రమే.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 17:6</span>
+                "నీవు ఆ బండను కొట్టవలెను, అప్పుడు జనులు త్రాగుటకు దానిలో నుండి నీళ్లు బయలుదేరును."
+            </div>
+        </div>
+
+        <!-- Block 14 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">14. ప్రార్థనలో విజయం (అమాలేకీయులతో యుద్ధం)</h4>
+            <p class="explanation-text">
+               కింద యుద్ధరంగంలో యెహోషువ శత్రువుతో పోరాడుతున్నాడు.
+పైన కొండ మీద మోషే దేవుని ఎదుట చేతులు ఎత్తాడు.
+మోషే చేతులు ఎత్తినప్పుడల్లా ఇశ్రాయేలీయులు విజయం సాధించారు.
+చేతులు దిగజారినప్పుడు శత్రువు పైచేయి సాధించాడు.
+యుద్ధ ఫలితం ఆయుధాలపై కాదు, ప్రార్థనపై ఆధారపడింది.
+ఇది విజ్ఞాపన ప్రార్థనకు ఉన్న మహా శక్తిని చూపిస్తుంది.
+ప్రార్థనలో నిలిచినప్పుడు దేవుడు తన ప్రజలకు విజయాన్ని ఇస్తాడు.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 17:11</span>
+                "మోషే తన చెయ్యి పైకెత్తినప్పుడల్లా ఇశ్రాయేలీయులు గెలిచిరి."
+            </div>
+        </div>
+
+        <!-- PART 2: THE COVENANT & LAW -->
+        <h3 class="text-3xl font-bold mb-10 mt-20 text-orange-800 dark:text-gold-400">భాగం 2: నిబంధన మరియు ధర్మశాస్త్రం (అధ్యాయాలు 19-24)</h3>
+
+        <p class="mb-8">విడుదల పొందిన ప్రజలు ఎలా జీవించాలి? దేవుడు వారిని సీనాయి కొండ దగ్గరకు తెచ్చి, వారితో పెళ్లి ఒప్పందం (Covenant) చేసుకున్నాడు.</p>
+
+        <!-- Block 15 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">15. యాజక రాజ్యము</h4>
+            <p class="explanation-text">
+                దేవుడు ఇశ్రాయేలును కేవలం ఒక దేశంగా మాత్రమే పిలవలేదు.
+ఆయన వారిని ఒక యాజక రాజ్యంగా ఏర్పరచాడు.
+అంటే లోకమంతటికీ దేవుని స్వభావాన్ని చూపించే బాధ్యత వారిది.
+వారు దేవుడు–మనుష్యుల మధ్య సాక్షులుగా నిలవవలసి ఉంది.
+ఈ పిలుపు గౌరవంతో పాటు బాధ్యతను కూడా కలిగి ఉంది.
+దేవుని వెలుగును లోకానికి ప్రతిఫలించాల్సిన జీవితం ఇది.
+ఈ రోజున అదే యాజక రాజ్యపు పిలుపు సంఘానికి — మనకే — ఇవ్వబడింది.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 19:6</span>
+                "సమస్త దేశములు నావే గదా... మీరు నాకు యాజక రాజ్యముగాను పరిశుద్ధమైన జనముగాను ఉందురు."
+            </div>
+        </div>
+
+        <!-- Block 16 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">16. పది ఆజ్ఞలు: దేవుని ప్రమాణాలు</h4>
+            <p class="explanation-text">
+                పది ఆజ్ఞలు దేవుడు మనకు ఇచ్చిన పవిత్ర ప్రమాణాలు.
+ఇవి మన స్వేచ్ఛను హరించడానికి కాదు, మనల్ని కాపాడడానికి ఇచ్చినవే.
+అస్తవ్యస్తమైన జీవితానికి ఇవి దేవుని మార్గదర్శక సరిహద్దులు.
+మొదటి నాలుగు ఆజ్ఞలు దేవునితో మన సంబంధాన్ని సరిచేస్తాయి.
+ఆయనను ప్రేమించటం, గౌరవించటం నేర్పిస్తాయి.
+మిగిలిన ఆరు ఆజ్ఞలు మనుషులతో మన సంబంధాలను క్రమబద్ధం చేస్తాయి.
+దేవుని చిత్తం ప్రకారం జీవించడమే నిజమైన స్వేచ్ఛ అని ఇవి బోధిస్తాయి.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 20:3</span>
+                "నేను తప్ప వేరొక దేవుడు నీకు ఉండకూడదు."
+            </div>
+        </div>
+
+        <!-- Block 17 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">17. బంగారు దూడ (Idolatry)</h4>
+            <p class="explanation-text">
+                మోషే కొండ మీద దేవునితో సంభాషిస్తుండగా కింద ప్రజలు ఆగలేకపోయారు.
+దేవుని నిరీక్షణలో సహనం కోల్పోయిన వారు బంగారు దూడను తయారు చేసుకున్నారు.
+కంటికి కనిపించేదే దేవుడని వారు భావించారు.
+ఇది మనిషి హృదయం ఎంత త్వరగా దారి తప్పిపోతుందో చూపిస్తుంది.
+దేవుని ఆలస్యం అనిపించినప్పుడు మనం ప్రత్యామ్నాయాలను సృష్టించుకుంటాం.
+సహనం నశించిన చోట విగ్రహారాధన మొదలవుతుంది.
+నిజమైన దేవునిని విడిచి తాత్కాలిక భద్రత వైపు మనిషి మొగ్గుచూపుతాడు.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 32:4</span>
+                "వారు పోతపోసిన దూడను చేసికొని - ఓ ఇశ్రాయేలూ, ఐగుప్తులోనుండి నిన్ను రప్పించిన నీ దేవుడు ఇదే అని చెప్పుకొనిరి."
+            </div>
+        </div>
+
+        <!-- Block 18 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">18. నీ సన్నిధి లేకపోతే నేను వెళ్ళను</h4>
+            <p class="explanation-text">
+                పాపం కారణంగా దేవుడు “నేను మీతో రాను, దూతను పంపుతాను” అని చెప్పాడు.
+ఇది వినగానే మోషే ఆ ప్రతిపాదనను స్వీకరించలేదు.
+విజయం కన్నా సన్నిధే ముఖ్యమని అతడు గ్రహించాడు.
+అందుకే “నీ సన్నిధి రానియెడల మమ్మును తోడుకొని పోకుము” అని ప్రార్థించాడు.
+దేవుని సన్నిధి లేకపోతే ప్రయాణమే వ్యర్థం.
+సఫలత, ఆశీర్వాదాలు సన్నిధికి ప్రత్యామ్నాయం కావు.
+దేవుని సన్నిధి ఉన్న చోటే నిజమైన గమ్యం ఉంటుంది.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 33:15</span>
+                "అతడు - నీ సన్నిధి రానియెడల ఇక్కడి నుండి మమ్మును తోడుకొని పోకుము."
+            </div>
+        </div>
+
+        <!-- PART 3: THE TABERNACLE -->
+        <h3 class="text-3xl font-bold mb-10 mt-20 text-orange-800 dark:text-gold-400">భాగం 3: దేవుడు మన మధ్య నివసించుట (అధ్యాయాలు 25-40)</h3>
+
+        <p class="mb-8">బైబిల్ లో ఎక్కువ అధ్యాయాలు (13 అధ్యాయాలు) గుడారం నిర్మాణానికే కేటాయించబడ్డాయి. ఎందుకంటే దేవుడు దూరంగా ఆకాశంలో ఉండాలనుకోలేదు, మన మధ్య ఉండాలనుకున్నాడు.</p>
+
+        <!-- Block 19 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">19. నేను వారిలో నివసించునట్లు...</h4>
+            <p class="explanation-text">
+                ఇదే నిర్గమకాండము యొక్క లోతైన సందేశం.
+పాపులైన మనుషుల మధ్య పరిశుద్ధుడైన దేవుడు ఎలా నివసించగలడు అనే ప్రశ్నకు ఇదే సమాధానం.
+దేవుడు ప్రత్యక్ష గుడారం ద్వారా తన సన్నిధిని ప్రజల మధ్య నిలిపాడు.
+ఆ గుడారం దేవుడు మన మధ్య నివసించాలనే ఆయన హృదయాన్ని చూపించింది.
+దూరంగా ఉండే దేవుడు కాదు, సమీపంగా ఉండే దేవుడు ఆయన.
+ఈ ప్రత్యక్ష గుడారం తరువాతి గొప్ప సత్యానికి సాదృశ్యంగా నిలిచింది.
+అది యేసు క్రీస్తు శరీరధారణగా వచ్చిన సత్యాన్ని (యోహాను సువార్త 1:14) ముందుగానే సూచించింది.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 25:8</span>
+                "నేను వారిలో నివసించునట్లు వారు నాకు పరిశుద్ధ స్థలమును నిర్మింపవలెను."
+            </div>
+        </div>
+
+        <!-- Block 20 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">20. కరుణాపీఠము (Mercy Seat)</h4>
+            <p class="explanation-text">
+                ప్రత్యక్ష గుడారంలోని మందసం పై రెండు కెరూబుల మధ్య కరుణాపీఠం నిలిచింది.
+అదే దేవుడు మనిషిని కలుసుకునే స్థలంగా నిర్ణయించబడింది.
+అక్కడ నుండే దేవుడు తన ప్రజలతో మాటలాడేవాడు.
+మందసంలో ఉన్న ధర్మశాస్త్రం తీర్పును ప్రకటిస్తుంది.
+కాని ఆ ధర్మశాస్త్రం మీద ఉన్న కరుణాపీఠం క్షమాపణను అందిస్తుంది.
+రక్తం చిందించబడిన చోట కృప ప్రవహిస్తుంది.
+న్యాయంపై కరుణ విజయాన్ని పొందుతుందని ఇది ప్రకటిస్తుంది.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 25:22</span>
+                "అక్కడ నేను నిన్ను కలిసికొని, కరుణాపీఠము మీదనుండి... నీతో మాటలాడెదను."
+            </div>
+        </div>
+
+        <!-- Block 21 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">21. యాజకుని వస్త్రాలు - పవిత్రత</h4>
+            <p class="explanation-text">
+                ప్రధాన యాజకుడైన అహరోను ధరించే వస్త్రాలు పవిత్రతకు సంకేతంగా నిలిచాయి.
+ఆ వస్త్రాలు “మహిమ కొరకు, అలంకారము కొరకు” ఉండాలని దేవుడు ఆజ్ఞ ఇచ్చాడు.
+యాజకుని సేవ కేవలం క్రియ కాదు, దేవుని మహిమను ప్రతిబింబించే జీవితం.
+అహరోను తన భుజాల మీద ఇశ్రాయేలు గోత్రాల పేర్లు మోసేవాడు.
+అలాగే తన రొమ్ము మీద వారి పేర్లను మోసి దేవుని సన్నిధిలో నిలిచేవాడు.
+ఇది మధ్యవర్తిత్వ ప్రేమను, బాధ్యతను చూపిస్తుంది.
+అదే విధంగా యేసు క్రీస్తు కూడా మన పేర్లను తన హృదయం మీద మోసుకుంటూ దేవుని ఎదుట మనకొరకు నిలిచాడు.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 28:2</span>
+                "నీ సహోదరుడైన అహరోనుకు మహిమయు అలంకారమును కలుగునట్లు ప్రతిష్ఠిత వస్త్రములను కుట్టవలెను."
+            </div>
+        </div>
+
+        <!-- Block 22 -->
+        <div class="commentary-block">
+            <h4 class="text-xl font-bold mb-3 text-gray-800 dark:text-gray-200">22. దేవుని మహిమ దిగివచ్చింది</h4>
+            <p class="explanation-text">
+               పుస్తకం చివరికి వచ్చేసరికి ప్రజలు దేవుడు చెప్పినట్టే గుడారాన్ని నిర్మించారు.
+ఆజ్ఞకు విధేయత చూపిన చోట దేవుని సన్నిధి దిగివచ్చింది.
+యెహోవా మేఘము ప్రత్యక్షపు గుడారాన్ని కమ్ముకుంది.
+దేవుని తేజస్సు గుడారమంతటిని నింపింది.
+ఆ మహిమ ముందు మోషే కూడా లోపలికి ప్రవేశించలేకపోయాడు.
+ఇది దేవుని పరిశుద్ధత ఎంత గొప్పదో వెల్లడించింది.
+అత్యంత ముఖ్యంగా, దేవుడు ఇప్పుడు తన ప్రజల మధ్య నివసిస్తున్నాడని ఇది ప్రకటించింది.
+            </p>
+            <div class="verse-card">
+                <span class="verse-ref">నిర్గమకాండము 40:34</span>
+                "అప్పుడు మేఘము ప్రత్యక్షపు గుడారమును కమ్మగా యెహోవా తేజస్సు మందిరమును నింపెను."
+            </div>
+        </div>
+
+        <div class="bg-orange-50 dark:bg-gray-800 p-8 rounded-xl border border-orange-200 dark:border-gray-700 text-center mt-16">
+            <h3 class="text-2xl font-bold mb-4 text-orange-900 dark:text-gold-500">తరువాత ఏంటి?</h3>
+            <p class="mb-6">దేవుడు ప్రజల మధ్యకు వచ్చాడు. ఇప్పుడు వారు పరిశుద్ధుడైన దేవునిని ఎలా సమీపించాలి? అదే "లేవీయకాండము" (Leviticus) సారాంశం.</p>
+            <div class="inline-block px-8 py-3 bg-black text-white dark:bg-gold-500 dark:text-black font-bold uppercase tracking-widest rounded-full">
+                నిర్గమకాండము 1వ అధ్యాయం తెరవండి
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-black text-white py-16 text-center border-t-4 border-gold-500">
+        <h2 class="text-3xl font-brand text-gold-500 mb-6">Word of God (WOG)</h2>
+        <p class="text-gray-400 mb-8 max-w-lg mx-auto">సత్యవాక్యమును సరిగా ఉపదేశించువానిగాను, సిగ్గుపడనక్కరలేని పనివానిగాను నిన్నునీవే దేవునికి కనపరచుకొనుటకు జాగ్రత్తపడుము. 2 తిమోతికి 2:15</p>
+        <p class="text-6xl font-brand text-white/10 tracking-widest mt-8">EXODUS</p>
+        <p class="text-xs text-gray-600 mt-8">© 2026 WOG Ministries. All Rights Reserved.</p>
+    </footer>
+
+    <!-- MOBILE TOOLBAR -->
+    <div class="toolbar">
+        <div class="flex items-center gap-2">
+            <button onclick="adjustFont(-1)" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-white font-bold active:scale-95 transition">A-</button>
+            <button onclick="adjustFont(1)" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-white font-bold active:scale-95 transition">A+</button>
+        </div>
+        <button onclick="toggleTheme()" class="px-5 py-2 rounded-full bg-black dark:bg-gold-500 text-white dark:text-black font-bold uppercase text-xs tracking-wider shadow-lg active:scale-95 transition">
+            <span id="theme-label">Dark</span>
+        </button>
+    </div>
+
+    <script>
+        let currentSize = 20; 
+        const root = document.documentElement;
+
+        function adjustFont(dir) {
+            if (dir === 1 && currentSize < 32) currentSize += 2;
+            if (dir === -1 && currentSize > 16) currentSize -= 2;
+            root.style.setProperty('--content-size', currentSize + 'px');
+        }
+
+        const themeLabel = document.getElementById('theme-label');
+        if (localStorage.theme === 'dark') {
+            root.classList.add('dark');
+            themeLabel.innerText = 'Light';
+        }
+
+        function toggleTheme() {
+            if (root.classList.contains('dark')) {
+                root.classList.remove('dark');
+                localStorage.theme = 'light';
+                themeLabel.innerText = 'Dark';
+            } else {
+                root.classList.add('dark');
+                localStorage.theme = 'dark';
+                themeLabel.innerText = 'Light';
+            }
+        }
+
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("reading-progress").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+</html>
